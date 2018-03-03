@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // Get the laplacian of h for the surface tension
-        volScalarField lap_h("lap_h", fvc::laplacian(h));
+        GeometricField<double> lap_h = fvc::laplacian(h);
 
         while (simple.correctNonOrthogonal())
         {
