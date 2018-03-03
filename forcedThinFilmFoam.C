@@ -45,15 +45,20 @@ int main(int argc, char *argv[])
     #include "createControl.H"
     #include "createFields.H"
 
-    // Determine the growth field BEFORE incrementing time.
-    forAll(mesh.C(), cell_i){
-        cur_h = h[cell_i];
+    void update_growth_field(){
+        forAll(mesh.C(), cell_i){
+            cur_h = h[cell_i];
 
-        if(cur_h < SMALL) growth[cell_i] = 0; // Zero check
-        else if(cur_h < d) growth[cell_i] = a*h;
-        else if (h < hmax) growth[cell_i] = d*h;
-        else growth[cell_i] = 0; // No growth past hmax
+            if(cur_h < SMALL) growth[cell_i] = 0; // Zero check
+            else if(cur_h < d) growth[cell_i] = a*h;
+            else if (h < hmax) growth[cell_i] = d*h;
+            else growth[cell_i] = 0; // No growth past hmax
+        };
     };
+
+    // Determine the growth field BEFORE incrementing time.
+    update_growth_field();
+    growth.write();
 
     while (runTime.run())
     {
@@ -78,15 +83,8 @@ int main(int argc, char *argv[])
             hEqn.solve();
         }
 
-        // Determine the growth field BEFORE incrementing time.
-        forAll(mesh.C(), cell_i){
-            cur_h = h[cell_i];
-
-            if(cur_h < SMALL) growth[cell_i] = 0; // Zero check
-            else if(cur_h < d) growth[cell_i] = a*h;
-            else if (h < hmax) growth[cell_i] = d*h;
-            else growth[cell_i] = 0; // No growth past hmax
-        };
+        // The growth field is written based on the h field that is written.
+        update_growth_field();
 
         runTime.write();
 
