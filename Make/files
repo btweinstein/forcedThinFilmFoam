@@ -1,0 +1,3 @@
+diffusionPressureFoam.C
+
+EXE = ~/git/forcedThinFilmFoam/forcedThinFilmFoam
