@@ -52,33 +52,23 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        //*** Calculate the concentration field ***
+        // Get the laplacian of h for the surface tension
+        volScalarField lap_h('lap_h', fvc::laplacian(h))
+
+        // Determine the growth everywhere
 
         while (simple.correctNonOrthogonal())
         {
-            fvScalarMatrix cEqn
+            fvScalarMatrix hEqn
             (
-                fvm::ddt(c)
-              - fvm::laplacian(D, c)
+                fvm::ddt(h)
+              + fvm::div(h*vBottom)
+              - ((rho*g)/(3*mu))*fvm::laplacian(pow(h,3),h)
+              + (sigma/(3*mu))*fvm::laplacian(pow(h,3), lap_h)
+              ==
+              growth
             );
-            cEqn.solve();
-        }
-
-        //*** Calculate the resulting pressure field
-        rho = rho_0*(1 + beta*c);
-        volVectorField rhog("rhog", rho*g);
-
-        while (simple.correctNonOrthogonal())
-        {
-            fvScalarMatrix pEqn
-            (
-                fvm::laplacian(p)
-              - fvc::div(rhog)
-            );
-            //pEqn.setReference(pRefCell, getRefCellValue(p_rgh, pRefCell));
-            //pEqn.setReference(0, 0);
-            // Assumes that pressure at one boundary is set.
-            pEqn.solve();
+            hEqn.solve();
         }
 
         runTime.write();

@@ -13,6 +13,8 @@ volScalarField c
     mesh
 );
 
+// Reading imposed velocity field
+
 Info<< "Reading velocity field on bottom h\n" << endl;
 
 volVectorField vBottom
@@ -20,14 +22,13 @@ volVectorField vBottom
     IOobject
     (
         "vBottom",
-        runTime.timeName(),
+        runTime.constant(), // IN THE CONSTANT DIRECTORY
         mesh,
         IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
+        IOobject::NO_WRITE
     ),
     mesh
 );
-
 
 // *** THIN FILM TRANSPORT PROPERTIES ***
 Info<< "Reading thinFilmTransportProperties\n" << endl;
@@ -62,7 +63,12 @@ dimensionedScalar sigma
     thinFilmTransportProperties.lookup("sigma")
 );
 
-#include "readGravitationalAcceleration.H"
+Info<< "Reading gravitational acceleration\n" << endl;
+//Note that the code assumes that g is perpendicular to the field.
+dimensionedScalar g
+(
+    thinFilmTransportProperties.lookup("g")
+);
 
 // *** THIN FILM GROWTH PROPERTIES ***
 
