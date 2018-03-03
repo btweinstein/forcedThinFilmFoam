@@ -1,10 +1,10 @@
-Info<< "Reading field c\n" << endl;
+Info<< "Reading field h\n" << endl;
 
 volScalarField c
 (
     IOobject
     (
-        "c",
+        "h",
         runTime.timeName(),
         mesh,
         IOobject::MUST_READ,
@@ -13,13 +13,13 @@ volScalarField c
     mesh
 );
 
-Info<< "Creating pressure field p\n" << endl;
+Info<< "Reading velocity field on bottom h\n" << endl;
 
-volScalarField p
+volVectorField vBottom
 (
     IOobject
     (
-        "p",
+        "vBottom",
         runTime.timeName(),
         mesh,
         IOobject::MUST_READ,
@@ -28,13 +28,15 @@ volScalarField p
     mesh
 );
 
-Info<< "Reading transportProperties\n" << endl;
 
-IOdictionary transportProperties
+// *** THIN FILM TRANSPORT PROPERTIES ***
+Info<< "Reading thinFilmTransportProperties\n" << endl;
+
+IOdictionary thinFilmTransportProperties
 (
     IOobject
     (
-        "transportProperties",
+        "thinFilmTransportProperties",
         runTime.constant(),
         mesh,
         IOobject::MUST_READ_IF_MODIFIED,
@@ -42,40 +44,56 @@ IOdictionary transportProperties
     )
 );
 
-Info<< "Reading diffusion constant D\n" << endl;
-
-dimensionedScalar D
+Info<< "Reading film viscosity\n" << endl;
+dimensionedScalar mu
 (
-    transportProperties.lookup("D")
+    thinFilmTransportProperties.lookup("mu")
 );
 
-Info<< "Reading base density of the media rho_0\n" << endl;
-
-dimensionedScalar rho_0
+Info<< "Reading film density\n" << endl;
+dimensionedScalar mu
 (
-    transportProperties.lookup("rho_0")
+    thinFilmTransportProperties.lookup("rho")
 );
 
-Info<< "Reading solute expansion coefficient beta \n" << endl;
-
-dimensionedScalar beta
+Info<< "Reading film surface tension\n" << endl;
+dimensionedScalar sigma
 (
-    transportProperties.lookup("beta")
+    thinFilmTransportProperties.lookup("sigma")
 );
 
 #include "readGravitationalAcceleration.H"
 
-Info<< "Creating density field\n" << endl;
+// *** THIN FILM GROWTH PROPERTIES ***
 
-volScalarField rho
+Info<< "Reading thinFilmGrowthProperties\n" << endl;
+
+IOdictionary thinFilmGrowthProperties
 (
     IOobject
     (
-        "rho",
-        runTime.timeName(),
+        "thinFilmGrowthProperties",
+        runTime.constant(),
         mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    rho_0*(1 + beta*c)
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE
+    )
+);
+
+Info<< "Reading growth distance from front\n" << endl;
+dimensionedScalar d
+(
+    thinFilmGrowthProperties.lookup("d")
+);
+
+Info<< "Reading growth rate\n" << endl;
+dimensionedScalar a
+(
+    thinFilmGrowthProperties.lookup("a")
+);
+
+Info<< "Reading maximum film height\n" << endl;
+dimensionedScalar hmax
+(
+    thinFilmGrowthProperties.lookup("hmax")
 );
