@@ -52,7 +52,7 @@ dimensionedScalar mu
 );
 
 Info<< "Reading film density\n" << endl;
-dimensionedScalar mu
+dimensionedScalar rho
 (
     thinFilmTransportProperties.lookup("rho")
 );
@@ -116,7 +116,7 @@ volScalarField growth
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    dimensionedScalar("temp_growth", dimensionSet(0,1,-1,0,0,0,0),0)
+    a*h
 );
 
 // Other miscellaneous stuff

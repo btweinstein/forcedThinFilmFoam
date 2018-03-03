@@ -1,3 +1,0 @@
-diffusionPressureFoam.C
-
-EXE = ~/git/diffusionPressureFoam/diffusionPressureFoam
