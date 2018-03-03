@@ -130,7 +130,7 @@ volScalarField growth
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    a*h
+    a*h // It is updated later. This is to initialize with correct units...
 );
 
 // Other miscellaneous stuff
