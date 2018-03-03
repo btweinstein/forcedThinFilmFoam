@@ -114,9 +114,9 @@ volScalarField growth
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
-        IOobject::NO_WRITE
+        IOobject::AUTO_WRITE
     ),
-    mesh
+    dimensionedScalar("temp_growth", dimensionSet(0,1,-1,0,0,0,0),0)
 );
 
 // Other miscellaneous stuff

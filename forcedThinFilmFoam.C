@@ -44,20 +44,19 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
     #include "createControl.H"
     #include "createFields.H"
-  
+
+    // Determine the growth field BEFORE incrementing time.
+    forAll(mesh.C(), cell_i){
+        cur_h = h[cell_i];
+
+        if(cur_h < SMALL) growth[cell_i] = 0; // Zero check
+        else if(cur_h < d) growth[cell_i] = a*h;
+        else if (h < hmax) growth[cell_i] = d*h;
+        else growth[cell_i] = 0; // No growth past hmax
+    };
+
     while (runTime.run())
     {
-        // Determine the growth field BEFORE incrementing time.
-        forAll(mesh.C(), cell_i){
-            cur_h = h[cell_i];
-
-            if(cur_h < SMALL) growth[cell_i] = 0; // Zero check
-            else if(cur_h < d) growth[cell_i] = a*h;
-            else if (h < hmax) growth[cell_i] = d*h;
-            else growth[cell_i] = 0; // No growth past hmax
-        };
-        growth.write()
-
         runTime++;
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
@@ -78,6 +77,16 @@ int main(int argc, char *argv[])
             );
             hEqn.solve();
         }
+
+        // Determine the growth field BEFORE incrementing time.
+        forAll(mesh.C(), cell_i){
+            cur_h = h[cell_i];
+
+            if(cur_h < SMALL) growth[cell_i] = 0; // Zero check
+            else if(cur_h < d) growth[cell_i] = a*h;
+            else if (h < hmax) growth[cell_i] = d*h;
+            else growth[cell_i] = 0; // No growth past hmax
+        };
 
         runTime.write();
 
