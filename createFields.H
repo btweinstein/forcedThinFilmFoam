@@ -22,7 +22,7 @@ volVectorField vBottom
     IOobject
     (
         "vBottom",
-        runTime.constant(), // IN THE CONSTANT DIRECTORY
+        runTime.timeName(), // IN THE CONSTANT DIRECTORY
         mesh,
         IOobject::MUST_READ,
         IOobject::NO_WRITE
@@ -134,4 +134,4 @@ volScalarField growth
 );
 
 // Other miscellaneous stuff
-Info << "Cutoff value for h is" << SMALL << "\n" << endl;
+Info << "Cutoff value for h is " << SMALL << "\n" << endl;
