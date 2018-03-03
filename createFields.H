@@ -1,6 +1,6 @@
 Info<< "Reading field h\n" << endl;
 
-volScalarField c
+volScalarField h
 (
     IOobject
     (
@@ -103,3 +103,21 @@ dimensionedScalar hmax
 (
     thinFilmGrowthProperties.lookup("hmax")
 );
+
+// Creating the growth field
+
+volScalarField growth
+(
+    IOobject
+    (
+        "growth",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+// Other miscellaneous stuff
+Info << "Cutoff value for h is" << SMALL << "\n" << endl;

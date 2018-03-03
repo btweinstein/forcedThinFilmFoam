@@ -53,9 +53,17 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // Get the laplacian of h for the surface tension
-        volScalarField lap_h('lap_h', fvc::laplacian(h))
+        volScalarField lap_h('lap_h', fvc::laplacian(h));
 
-        // Determine the growth everywhere
+        // Determine the growth field...need to loop over all cells.
+        forAll(mesh.C(), cell_i){
+            cur_h = h[cell_i];
+
+            if(cur_h < SMALL) growth[cell_i] = 0; // Zero check
+            else if(cur_h < d) growth[cell_i] = a*h;
+            else if (h < hmax) growth[cell_i] = d*h;
+            else growth[cell_i] = 0; // No growth past hmax
+        };
 
         while (simple.correctNonOrthogonal())
         {
@@ -63,8 +71,8 @@ int main(int argc, char *argv[])
             (
                 fvm::ddt(h)
               + fvm::div(h*vBottom)
-              - ((rho*g)/(3*mu))*fvm::laplacian(pow(h,3),h)
-              + (sigma/(3*mu))*fvm::laplacian(pow(h,3), lap_h)
+              - ((rho*g)/(3*mu))*fvm::laplacian(Foam::pow(h,3),h)
+              + (sigma/(3*mu))*fvm::laplacian(Foam::pow(h,3), lap_h)
               ==
               growth
             );
