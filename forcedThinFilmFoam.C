@@ -47,15 +47,7 @@ int main(int argc, char *argv[])
   
     while (runTime.run())
     {
-
-        runTime++;
-
-        Info<< "Time = " << runTime.timeName() << nl << endl;
-
-        // Get the laplacian of h for the surface tension
-        volScalarField lap_h('lap_h', fvc::laplacian(h));
-
-        // Determine the growth field...need to loop over all cells.
+        // Determine the growth field BEFORE incrementing time.
         forAll(mesh.C(), cell_i){
             cur_h = h[cell_i];
 
@@ -64,6 +56,14 @@ int main(int argc, char *argv[])
             else if (h < hmax) growth[cell_i] = d*h;
             else growth[cell_i] = 0; // No growth past hmax
         };
+        growth.write()
+
+        runTime++;
+
+        Info<< "Time = " << runTime.timeName() << nl << endl;
+
+        // Get the laplacian of h for the surface tension
+        volScalarField lap_h('lap_h', fvc::laplacian(h));
 
         while (simple.correctNonOrthogonal())
         {
