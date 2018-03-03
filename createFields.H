@@ -30,6 +30,20 @@ volVectorField vBottom
     mesh
 );
 
+Info<< "Calculating face flux field phi\n" << endl;
+surfaceScalarField phi
+(
+    IOobject
+    (
+        "phi",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    linearInterpolate(vBottom) & mesh.Sf()
+);
+
 // *** THIN FILM TRANSPORT PROPERTIES ***
 Info<< "Reading thinFilmTransportProperties\n" << endl;
 

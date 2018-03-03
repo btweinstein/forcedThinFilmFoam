@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
             fvScalarMatrix hEqn
             (
                 fvm::ddt(h)
-              + fvm::div(h*vBottom)
+              + fvm::div(h, phi)
               - ((rho*g)/(3*mu))*fvm::laplacian(Foam::pow(h,3),h)
               + (sigma/(3*mu))*fvm::laplacian(Foam::pow(h,3), lap_h)
               ==
