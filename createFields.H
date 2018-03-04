@@ -25,7 +25,7 @@ volVectorField vBottom
         runTime.timeName(), // IN THE CONSTANT DIRECTORY
         mesh,
         IOobject::MUST_READ,
-        IOobject::NO_WRITE
+        IOobject::AUTO_WRITE
     ),
     mesh
 );
@@ -41,7 +41,7 @@ surfaceScalarField phi
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    linearInterpolate(vBottom) & mesh.Sf()
+    fvc::interpolate(vBottom) & mesh.Sf()
 );
 
 // *** THIN FILM TRANSPORT PROPERTIES ***
