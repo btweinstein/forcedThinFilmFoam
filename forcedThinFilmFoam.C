@@ -69,12 +69,14 @@ int main(int argc, char *argv[])
         );
         //grav_contrib = grav_contrib & mesh.Sf();
 
+        surfaceScalarField fluxAdjusted ("fluxAdjusted", phi - grav_contrib);
+
         while (simple.correctNonOrthogonal())
         {
             fvScalarMatrix hEqn
             (
                 fvm::ddt(h)
-              + fvm::div(phi - grav_contrib, h)
+              + fvm::div(fluxAdjusted, h)
               ==
               growth
             );
