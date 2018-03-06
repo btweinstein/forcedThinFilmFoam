@@ -60,13 +60,21 @@ int main(int argc, char *argv[])
         //lap_h = fvc::laplacian(h); This requires a new BC, can't do it now.
         //+ (sigma/(3*mu))*fvm::laplacian(Foam::pow(h,3), lap_h)
 
+        // One power of h lower so that we can stick on the h at the end.
+        surfaceScalarField grav_contrib (
+            fvc::interpolate(
+                ((rho*g)/(3*mu))*Foam::pow(h,2)
+                )
+            *fvc::snGrad(h) * mesh.magSf()
+        );
+        //grav_contrib = grav_contrib & mesh.Sf();
+
         while (simple.correctNonOrthogonal())
         {
             fvScalarMatrix hEqn
             (
                 fvm::ddt(h)
-              + fvm::div(phi, h)
-              - ((rho*g)/(3*mu))*fvm::laplacian(Foam::pow(h,3),h)
+              + fvm::div(phi - grav_contrib, h)
               ==
               growth
             );
