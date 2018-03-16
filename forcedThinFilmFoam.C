@@ -58,7 +58,8 @@ int main(int argc, char *argv[])
 
         // Get the laplacian of h for the surface tension
 
-        volScalarField hcubed = Foam::pow(h, 3);
+        volScalarField hcubed = pow(h,3);
+        hcubed.dimensions() *= dimensionSet(0, -2, 0, 0, 0, 0, 0);
 
         while (simple.correctNonOrthogonal())
         {
@@ -66,8 +67,8 @@ int main(int argc, char *argv[])
             (
                 fvm::ddt(h)
               + fvc::div(phi, hcubed)
-              - ((rho*g)/(3*mu))*fvm::laplacian(Foam::pow(h,3),h)
-              + (sigma/(3*mu))*fvc::laplacian(Foam::pow(h,3), fvc::laplacian(h))
+              - ((rho*g)/(3*mu))*fvm::laplacian(pow(h,3),h)
+              + (sigma/(3*mu))*fvc::laplacian(pow(h,3), fvc::laplacian(h))
               ==
               growth
             );
