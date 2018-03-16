@@ -60,12 +60,15 @@ int main(int argc, char *argv[])
         forAll(mesh.C(), cell_i){
             lap_h[cell_i] = h[cell_i];
         }
-        fvScalarMatrix lap_hEqn
-        (
-            fvm::laplacian(lap_h)
-        );
-        lap_hEqn.solve();
 
+        while (simple.correctNonOrthogonal())
+        {
+            fvScalarMatrix lap_hEqn
+            (
+                fvm::laplacian(lap_h)
+            );
+            lap_hEqn.solve();
+        }
 
         while (simple.correctNonOrthogonal())
         {
