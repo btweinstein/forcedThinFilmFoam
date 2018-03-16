@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // Get the laplacian of h for the surface tension
-        //lap_h = fvc::laplacian(h); This requires a new BC, can't do it now.
+        volScalarField lap_h = fvc::laplacian(h); //This requires a new BC, can't do it now.
         //+ (sigma/(3*mu))*fvm::laplacian(Foam::pow(h,3), lap_h)
 
         while (simple.correctNonOrthogonal())
