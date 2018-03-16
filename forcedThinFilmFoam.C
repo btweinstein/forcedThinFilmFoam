@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
                 fvm::ddt(h)
               + fvm::div(phi, h)
               - ((rho*g)/(3*mu))*fvm::laplacian(Foam::pow(h,3),h)
-              + (sigma/(3*mu))*fvm::laplacian(Foam::pow(h,3), lap_h)
+              + (sigma/(3*mu))*fvc::laplacian(Foam::pow(h,3), lap_h)
               ==
               growth
             );
