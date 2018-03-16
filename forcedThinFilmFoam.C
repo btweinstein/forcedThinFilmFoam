@@ -57,20 +57,6 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // Get the laplacian of h for the surface tension
-        /*
-        forAll(mesh.C(), cell_i){
-            lap_h[cell_i] = h[cell_i];
-        }
-
-        while (simple.correctNonOrthogonal())
-        {
-            fvScalarMatrix lap_hEqn
-            (
-                fvm::laplacian(lap_h)
-            );
-            lap_hEqn.solve();
-        }
-        */
 
         while (simple.correctNonOrthogonal())
         {

@@ -84,21 +84,6 @@ dimensionedScalar g
     thinFilmTransportProperties.lookup("g")
 );
 
-/*
-volScalarField lap_h
-(
-    IOobject
-    (
-        "lap_h",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::NO_WRITE
-    ),
-    mesh
-);
-*/
-
 // *** THIN FILM GROWTH PROPERTIES ***
 
 Info<< "Reading thinFilmGrowthProperties\n" << endl;
