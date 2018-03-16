@@ -57,8 +57,15 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // Get the laplacian of h for the surface tension
-        volScalarField lap_h = fvc::laplacian(h); //This requires a new BC, can't do it now.
-        //+ (sigma/(3*mu))*fvm::laplacian(Foam::pow(h,3), lap_h)
+        forAll(mesh.C(), cell_i){
+            lap_h[cell_i] = h[cell_i];
+        }
+        fvScalarMatrix lap_hEqn
+        (
+            fvm::laplacian(lap_h)
+        );
+        lap_hEqn.solve();
+
 
         while (simple.correctNonOrthogonal())
         {
@@ -67,6 +74,7 @@ int main(int argc, char *argv[])
                 fvm::ddt(h)
               + fvm::div(phi, h)
               - ((rho*g)/(3*mu))*fvm::laplacian(Foam::pow(h,3),h)
+              + (sigma/(3*mu))*fvm::laplacian(Foam::pow(h,3), lap_h)
               ==
               growth
             );
