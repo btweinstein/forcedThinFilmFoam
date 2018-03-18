@@ -13,6 +13,19 @@ volScalarField h
     mesh
 );
 
+volScalarField lap_h
+(
+    IOobject
+    (
+        "lap_h",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
 // Reading imposed velocity field
 
 Info<< "Reading velocity field on bottom h\n" << endl;
