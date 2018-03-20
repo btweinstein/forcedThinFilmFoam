@@ -67,8 +67,7 @@ int main(int argc, char *argv[])
               + fvm::div(phi, h)
               - ((rho*g)/(3*mu))*fvm::laplacian(Foam::pow(h,3),h)
               + (sigma/(3*mu))*fvc::laplacian(Foam::pow(h,3), lap_h)
-              ==
-              growth
+              - fvm::SuSp(growth_factor, h)
             );
             hEqn.solve();
         }

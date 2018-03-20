@@ -113,12 +113,6 @@ IOdictionary thinFilmGrowthProperties
     )
 );
 
-Info<< "Reading growth distance from front\n" << endl;
-dimensionedScalar d
-(
-    thinFilmGrowthProperties.lookup("d")
-);
-
 Info<< "Reading growth rate\n" << endl;
 dimensionedScalar a
 (
@@ -131,7 +125,21 @@ dimensionedScalar hmax
     thinFilmGrowthProperties.lookup("hmax")
 );
 
-// Creating the growth field
+// Creating the growth field...exponential growth proportional to h is multiplied by growth_factor
+
+volScalarField growth_factor
+(
+    IOobject
+    (
+        "growth_factor",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    a
+);
 
 volScalarField growth
 (
@@ -143,8 +151,11 @@ volScalarField growth
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    a*h // It is updated later. This is to initialize with correct units...
+    h*growth_factor // It is updated later
 );
+
+
+
 
 // Other miscellaneous stuff
 Info << "Cutoff value for h is " << SMALL << "\n" << endl;
