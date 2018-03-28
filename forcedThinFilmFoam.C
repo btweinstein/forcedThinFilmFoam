@@ -59,6 +59,12 @@ int main(int argc, char *argv[])
         // Get the laplacian of h for the surface tension
         lap_h = fvc::laplacian(h);
 
+        if(poisson_velocity){ // Solve for C, update vbottom and phi
+            solve( fvm::laplacian(CPoisson) == repulsion*h );
+            vBottom = fvc::grad(CPoisson);
+            phi = fvc::interpolate(vBottom) & mesh.Sf();
+        }
+
         while (simple.correctNonOrthogonal())
         {
             fvScalarMatrix hEqn

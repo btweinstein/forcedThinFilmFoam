@@ -30,7 +30,6 @@ volScalarField lap_h
 
 dictionary simple_dict = mesh.solutionDict().subDict("SIMPLE");
 // By default, this is true
-int constant_vBottom = simple_dict.lookupOrDefault("constant_vBottom", 1);
 int poisson_velocity = simple_dict.lookupOrDefault("poisson_velocity", 0);
 
 // Reading imposed velocity field
@@ -50,21 +49,20 @@ volVectorField vBottom
     mesh
 );
 
-if(poisson_velocity){
-    Info<< "Reading poisson solver field...\n" << endl;
-    volVectorField C
+if(poisson_velocity) Info << "Reading poisson solver field...\n" << endl;
+volScalarField CPoisson
+(
+    IOobject
     (
-        IOobject
-        (
-            "C",
-            runTime.timeName(), // IN THE CONSTANT DIRECTORY
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
-}
+        "CPoisson",
+        runTime.timeName(), // IN THE CONSTANT DIRECTORY
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::NO_WRITE
+    ),
+    mesh
+);
+
 
 Info<< "Calculating face flux field phi\n" << endl;
 surfaceScalarField phi
@@ -119,6 +117,14 @@ dimensionedScalar g
 (
     thinFilmTransportProperties.lookup("g")
 );
+
+if(poisson_velocity) Info<< "Reading poisson repulsion\n" << endl;
+
+dimensionedScalar repulsion
+(
+    thinFilmTransportProperties.lookupOrDefault("repulsion", 0)
+);
+
 
 // *** THIN FILM GROWTH PROPERTIES ***
 
