@@ -58,7 +58,7 @@ volScalarField CPoisson
         runTime.timeName(),
         mesh,
         IOobject::MUST_READ,
-        IOobject::NO_WRITE
+        IOobject::AUTO_WRITE
     ),
     mesh
 );
