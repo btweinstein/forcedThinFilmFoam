@@ -26,6 +26,13 @@ volScalarField lap_h
     mesh
 );
 
+// Check whether we are solving for the Poisson equation for velocity or not
+
+dictionary simple_dict = mesh.solutionDict().subDict("SIMPLE");
+// By default, this is true
+int constant_vBottom = simple_dict.lookupOrDefault("constant_vBottom", 1);
+int poisson_velocity = simple_dict.lookupOrDefault("poisson_velocity", 0);
+
 // Reading imposed velocity field
 
 Info<< "Reading velocity field on bottom h\n" << endl;
@@ -42,6 +49,22 @@ volVectorField vBottom
     ),
     mesh
 );
+
+if(poisson_velocity){
+    Info<< "Reading poisson solver field...\n" << endl;
+    volVectorField C
+    (
+        IOobject
+        (
+            "C",
+            runTime.timeName(), // IN THE CONSTANT DIRECTORY
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh
+    );
+}
 
 Info<< "Calculating face flux field phi\n" << endl;
 surfaceScalarField phi
