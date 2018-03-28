@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
 
         if(poisson_velocity){ // Solve for C, update vbottom and phi
             solve( fvm::laplacian(CPoisson) == repulsion*h );
+            CPoisson.write();
             vBottom = fvc::grad(CPoisson);
             phi = fvc::interpolate(vBottom) & mesh.Sf();
         }

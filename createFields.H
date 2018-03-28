@@ -41,7 +41,7 @@ volVectorField vBottom
     IOobject
     (
         "vBottom",
-        runTime.timeName(), // IN THE CONSTANT DIRECTORY
+        runTime.timeName(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
@@ -55,14 +55,13 @@ volScalarField CPoisson
     IOobject
     (
         "CPoisson",
-        runTime.timeName(), // IN THE CONSTANT DIRECTORY
+        runTime.timeName(),
         mesh,
-        IOobject::READ_IF_PRESENT,
+        IOobject::MUST_READ,
         IOobject::NO_WRITE
     ),
     mesh
 );
-
 
 Info<< "Calculating face flux field phi\n" << endl;
 surfaceScalarField phi
@@ -122,7 +121,7 @@ if(poisson_velocity) Info<< "Reading poisson repulsion\n" << endl;
 
 dimensionedScalar repulsion
 (
-    thinFilmTransportProperties.lookupOrDefault("repulsion", 0)
+    thinFilmTransportProperties.lookup("repulsion")
 );
 
 
