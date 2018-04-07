@@ -66,12 +66,15 @@ int main(int argc, char *argv[])
             phi = fvc::interpolate(vBottom) & mesh.Sf();
         }
 
+        volScalarField spagoot = pow(h,3);
+        spagoot.dimensions() /= dimLength*dimLength;
+
         while (simple.correctNonOrthogonal())
         {
             fvScalarMatrix hEqn
             (
                 fvm::ddt(h)
-              + fvm::div(phi, h)
+              + fvc::div(phi, spagoot)
               - ((rho*g)/(3*mu))*fvm::laplacian(pow(h,3),h)
               + (sigma/(3*mu))*fvc::laplacian(pow(h,3), lap_h)
               - fvm::SuSp(growth_factor, h)
