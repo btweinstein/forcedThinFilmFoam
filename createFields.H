@@ -29,7 +29,7 @@ volScalarField lap_h
 // Check whether we are solving for the Poisson equation for velocity or not
 
 dictionary simple_dict = mesh.solutionDict().subDict("SIMPLE");
-// By default, this is true
+// By default, this is false
 int poisson_velocity = simple_dict.lookupOrDefault("poisson_velocity", 0);
 
 // Reading imposed velocity field
@@ -124,6 +124,12 @@ dimensionedScalar repulsion
     thinFilmTransportProperties.lookup("repulsion")
 );
 
+Info<< "Reading radial velocity amplitude\n" << endl;
+
+dimensionedScalar radial_amp
+(
+    thinFilmTransportProperties.lookup("radial_amp")
+);
 
 // *** THIN FILM GROWTH PROPERTIES ***
 

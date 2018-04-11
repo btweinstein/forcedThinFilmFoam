@@ -66,6 +66,22 @@ int main(int argc, char *argv[])
             phi = fvc::interpolate(vBottom) & mesh.Sf();
         }
 
+        // Do something a little wacky...
+        forAll(mesh.C(), cell_i){
+
+            vector pos( mesh.points()[cell_i] );
+            double x = pos[0];
+            double y = pos[1];
+            // Get the angle
+            double phi = Foam::atan2(y, x);
+            // Get the radius
+            double r = Foam::sqrt(x*x + y*y);
+
+            vector U(radial_amp.value()*r*Foam::cos(phi), radial_amp.value()*r*Foam::sin(phi), 0);
+
+            vBottom[cell_i] = U;
+        };
+
         while (simple.correctNonOrthogonal())
         {
             fvScalarMatrix hEqn
