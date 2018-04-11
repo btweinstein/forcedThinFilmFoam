@@ -71,16 +71,14 @@ int main(int argc, char *argv[])
             vector pos( mesh.points()[cell_i] );
             double x = pos[0];
             double y = pos[1];
-            // Get the angle
-            double phi = Foam::atan2(y, x);
+            // Get the angle...DON'T USE PHI AS IT'S ALREADY DEFINED
+            double theta = Foam::atan2(y, x);
             // Get the radius
             double r = Foam::sqrt(x*x + y*y);
 
-            vector U(radial_amp.value()*r*Foam::cos(phi), radial_amp.value()*r*Foam::sin(phi), 0);
-
+            vector U(radial_amp.value()*r*Foam::cos(theta), radial_amp.value()*r*Foam::sin(theta), 0);
             vBottom[cell_i] = U;
         };
-
         phi = fvc::interpolate(vBottom) & mesh.Sf();
 
         while (simple.correctNonOrthogonal())
