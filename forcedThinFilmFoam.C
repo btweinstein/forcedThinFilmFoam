@@ -68,9 +68,9 @@ int main(int argc, char *argv[])
 
         // Do something a little wacky...
         forAll(mesh.C(), cell_i){
-            vector pos( mesh.points()[cell_i] );
-            double x = pos[0];
-            double y = pos[1];
+            //vector pos( mesh.points()[cell_i] );
+            double x = mesh.C()[cell_i].component(0);
+            double y = mesh.C()[cell_i].component(1);
             // Get the angle...DON'T USE PHI AS IT'S ALREADY DEFINED
             double theta = Foam::atan2(y, x);
             // Get the radius
