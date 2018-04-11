@@ -68,7 +68,6 @@ int main(int argc, char *argv[])
 
         // Do something a little wacky...
         forAll(mesh.C(), cell_i){
-
             vector pos( mesh.points()[cell_i] );
             double x = pos[0];
             double y = pos[1];
@@ -81,6 +80,8 @@ int main(int argc, char *argv[])
 
             vBottom[cell_i] = U;
         };
+
+        phi = fvc::interpolate(vBottom) & mesh.Sf();
 
         while (simple.correctNonOrthogonal())
         {
