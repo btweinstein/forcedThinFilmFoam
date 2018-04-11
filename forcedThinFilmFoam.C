@@ -76,7 +76,11 @@ int main(int argc, char *argv[])
             // Get the radius
             double r = Foam::sqrt(x*x + y*y);
 
-            vector U(radial_amp.value()*r*Foam::cos(theta), radial_amp.value()*r*Foam::sin(theta), 0);
+            double cur_h = h[cell_i];
+            double prefactor = radial_amp.value()*r*(1 - cur_h/hmax.value());
+            if(prefactor < 0) prefactor = 0;
+
+            vector U(prefactor*Foam::cos(theta), prefactor*Foam::sin(theta), 0);
             vBottom[cell_i] = U;
         };
         phi = fvc::interpolate(vBottom) & mesh.Sf();
