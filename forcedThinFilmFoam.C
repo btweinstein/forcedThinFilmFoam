@@ -46,9 +46,11 @@ int main(int argc, char *argv[])
     #include "createControl.H"
     #include "createFields.H"
 
-    // Determine the growth field BEFORE incrementing time.
+    // Determine the growth and diffusion field BEFORE incrementing time.
     #include "update_growth_field.H"
     growth.write();
+    #include "update_D_field.H"
+    D_active.write();
 
     while (runTime.run())
     {
@@ -72,6 +74,7 @@ int main(int argc, char *argv[])
             (
                 fvm::ddt(h)
               + fvm::div(phi, h)
+              - fvm::laplacian(D_active, h)
               - ((rho*g)/(3*mu))*fvm::laplacian(pow(h,3),h)
               + (sigma/(3*mu))*fvc::laplacian(pow(h,3), lap_h)
               - fvm::SuSp(growth_factor, h)
@@ -79,8 +82,9 @@ int main(int argc, char *argv[])
             hEqn.solve();
         }
 
-        // The growth field is written based on the h field that is written.
+        // The growth and D fields are written based on the h field that is written.
         #include "update_growth_field.H"
+        #include "update_D_field.H"
 
         runTime.write();
 

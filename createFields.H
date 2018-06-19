@@ -124,6 +124,33 @@ dimensionedScalar repulsion
     thinFilmTransportProperties.lookup("repulsion")
 );
 
+Info<< "Reading active diffusion constant\n" << endl;
+//Note that the code assumes that g is perpendicular to the field.
+dimensionedScalar D_active
+(
+    thinFilmTransportProperties.lookup("D_active_0")
+);
+
+Info<< "Reading active diffusion blocking exponent\n" << endl;
+dimensionedScalar blocking_exponent
+(
+    thinFilmTransportProperties.lookup("blocking_exponent")
+);
+
+// Create diffusion field
+
+volScalarField D_active
+(
+    IOobject
+    (
+        "D_active",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
 // *** THIN FILM GROWTH PROPERTIES ***
 
