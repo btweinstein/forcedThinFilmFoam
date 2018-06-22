@@ -181,6 +181,13 @@ dimensionedScalar hmax
     thinFilmGrowthProperties.lookup("hmax")
 );
 
+Info<< "Reading epsilon, height below which there is no growth. \n" << endl;
+dimensionedScalar epsilon
+(
+    thinFilmGrowthProperties.lookup("epsilon")
+);
+
+
 // Creating the growth field...exponential growth proportional to h is multiplied by growth_factor
 
 volScalarField growth_factor
